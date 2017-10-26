@@ -14,7 +14,7 @@ import {PrimeTemplate,SharedModule} from '../common/shared';
     template: `
         <div [ngClass]="'ui-fileupload ui-widget'" [ngStyle]="style" [class]="styleClass" *ngIf="mode === 'advanced'">
             <div class="ui-fileupload-buttonbar ui-widget-header ui-corner-top">
-                <span class="ui-fileupload-choose" [label]="chooseLabel" icon="fa-plus" pButton  [ngClass]="{'ui-state-focus': focus}" [attr.disabled]="disabled" > 
+                <span class="ui-fileupload-choose" [label]="chooseLabel" icon="fa-plus" pButton  [ngClass]="{'ui-state-focus': focus}" [attr.disabled]="disabled ? true : null" > 
                     <input #advancedfileinput type="file" (change)="onFileSelect($event)" [multiple]="multiple" [accept]="accept" [disabled]="disabled" (focus)="onFocus()" (blur)="onBlur()">
                 </span>
 
@@ -106,7 +106,7 @@ export class FileUpload implements OnInit,AfterViewInit,AfterContentInit,OnDestr
 
     @Output() onBeforeUpload: EventEmitter<any> = new EventEmitter();
 
-	@Output() onBeforeSend: EventEmitter<any> = new EventEmitter();
+    @Output() onBeforeSend: EventEmitter<any> = new EventEmitter();
 
     @Output() onUpload: EventEmitter<any> = new EventEmitter();
 
@@ -145,7 +145,7 @@ export class FileUpload implements OnInit,AfterViewInit,AfterContentInit,OnDestr
     public toolbarTemplate: TemplateRef<any>;
 
     focus: boolean;
-    
+
     selfInputChange: boolean;
 
     constructor(public domHandler: DomHandler, public sanitizer: DomSanitizer, public zone: NgZone){}
@@ -198,7 +198,7 @@ export class FileUpload implements OnInit,AfterViewInit,AfterContentInit,OnDestr
         let files = event.dataTransfer ? event.dataTransfer.files : event.target.files;
         for(let i = 0; i < files.length; i++) {
             let file = files[i];
-            
+
             if(!this.isFileSelected(file)){
               if(this.validate(file)) {
                   if(this.isImage(file)) {
@@ -224,11 +224,11 @@ export class FileUpload implements OnInit,AfterViewInit,AfterContentInit,OnDestr
             if((sFile.name + sFile.type + sFile.size) === (file.name + file.type+file.size)) {
                 return true;
             }
-        }   
-      
+        }
+
         return false;
     }
-    
+
     isIE11() {
         return !!window['MSInputMethodContext'] && !!document['documentMode'];
     }
@@ -360,7 +360,7 @@ export class FileUpload implements OnInit,AfterViewInit,AfterContentInit,OnDestr
           if(this.isIE11()) {
                this.selfInputChange = true; //IE11 fix to prevent onFileChange trigger again
           }
-         
+
           this.advancedFileInput.nativeElement.value = '';
       }
     }
